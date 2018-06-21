@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <!-- <script src="https://cdn.bootcss.com/jquery/2.0.1/jquery.min.js"></script> -->
+</head>
+<body>
+    <div class="box active huge_box"></div>
+    <script>
+        // 判断一个元素是否有某个类名
+        const box = document.querySelector('.box');
+        console.log(box.className);
+        console.log(box.classList.contains('active'));
+        // // jQuery实现 api
+        // console.log($('div').is('.active'));
+        // console.log($('div').hasClass('active'));
+
+        // 原生实现 jQuery 的 hasClass()
+        // 正则匹配：
+        // 类名字符串 用空格隔开，单纯indexOf判断，子字符串的可能。
+        // 最开始第一个 最后面 中间的类名，左右至少有一个空格
+        // 1、 开始和结束，有这个词就好了
+        //     词+空格   开始有一个或多个空格 ^\s*
+        //     空格+词   结束   \s$
+        // 2、 中间的情况
+        //     \s+词\s+
+        // match() 方法：使用正则表达式模式对字符串执行查找，并将包含查找的结果作为数组返回
+        function hasClass( elements,cName ){ 
+            return !!elements.className.match( new RegExp( "(\\s|^)" + cName + "(\\s|$)") ); 
+        };
+        // function hasClass(elements, cName) {
+        //     const reg = new RegExp('(\\s|^)' + cName + '(\\s|$)');
+        //     return reg.test(elements.className); 
+        // }
+
+        console.log(hasClass(box,'active'));
+
+        // 原生实现 removeClass
+        function removeClass(elements,cName){
+            if (hasClass(elements,cName)) {
+                //方法一：h5中的 classList 自带api --> remove
+                // elements.classList.remove(cName);   
+                //方法二：replace()
+                elements.className = elements.className.replace(new RegExp( "(\\s|^)" + cName + "(\\s|$)" ), " " );
+                console.log(elements.className);
+            } else {
+                console.log('没有此类名！');
+            }
+        }
+        removeClass(box,'active');
+    </script>
+</body>
+</html>
