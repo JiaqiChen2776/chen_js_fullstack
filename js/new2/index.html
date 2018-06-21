@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="box1">点击我得到id</div>
+    <script>
+        document.getElementById('box1').onclick = function() {
+            // alert(this.id);  //box1
+            // 闭包
+            // 普通函数的 this 指向：window 或 undefined ,箭头函数可解决
+            var func = function() {
+                alert(this.id);  //undefined？如何解决
+            }
+            func.call(this); //call() 与 apply() 也可解决
+        }
+    </script>
+    <script src="./call_apply.js"></script>
+</body>
+</html>
