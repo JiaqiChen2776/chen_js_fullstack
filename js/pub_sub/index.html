@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>最简单的发布订阅者模式</title>
+    <style>
+        html, body {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- vue 核心：发布订阅者模式
+    发布者 (一个)
+    订阅者 (多个)
+    一对多的关系，事件监听（回调响应事件） -->
+    <script>
+        // 可给一个元素定义多个相同的响应事件，即多个 订阅者
+        document.body.addEventListener('click',function() {
+            alert('111');  //此回调函数为 订阅者
+        },false);
+        document.body.addEventListener('keyup',function() {
+            alert('222');
+        },false);
+        document.body.addEventListener('click',function() {
+            alert('333');
+        },false);
+    </script>
+</body>
+</html>
