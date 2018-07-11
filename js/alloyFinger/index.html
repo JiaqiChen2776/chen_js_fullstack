@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        -webkit-touch-callout: none;  
+        -webkit-tap-highlight-color: transparent;
+        /* 四周轮廓 */
+        outline: none; 
+    }
+    html, body {
+        height: 100%;
+    }
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .box {
+        width: 200px;
+        height: 200px;
+        background: pink;
+    }
+</style>
+<body>
+    <div class="box"></div>
+    <script src="./utils.js"></script>
+    <!-- lodash 也提供了截流 -->
+    <script src="https://cdn.bootcss.com/lodash.js/4.17.10/lodash.min.js"></script>
+    <!-- <script src="http://alloyteam.github.io/AlloyFinger/asset/transform.js"></script> -->
+    <!-- <script src="http://alloyteam.github.io/AlloyFinger/alloy_finger.js"></script> -->
+    <script>
+        const oBox = document.querySelector('.box');
+        const startPoint = {x:0,y:0};
+        const DIRECT_VAL = 30;
+
+        // 一、alloyFinger 方法
+        // Transform(oBox);
+        // new AlloyFinger(oBox, {
+        //     // 详细清单，可反馈操纵的事件
+        //     swipe: function(evt) {
+        //         console.log(evt.direction);  //打印滑动方向
+        //     }
+        // }) 
+        
+        oBox.addEventListener('touchstart', (start) => {
+            // console.log(start.touches[0].clientX);
+            startPoint.x = start.touches[0].clientX;
+            startPoint.y = start.touches[0].clientY;
+        }, false);
+        // 偏移量
+        var checkMove = (move) => {
+            console.log(this);
+            // console.log(move.touches[0].clientX);
+            if (move.touches[0].clientX - startPoint.x > DIRECT_VAL) {
+                console.log('right');
+                return;
+            } else if (move.touches[0].clientX - startPoint.x < -DIRECT_VAL) {
+                console.log('left');
+                return;
+            }
+        }
+        // 二、lodash 方法，lodash 自带的 _.throttle() api
+        // oBox.addEventListener('touchmove',_.throttle(checkMove, 500));
+
+        // 三、引用 封装好的 utils.throttle
+        const handleTouchMove = utils.throttle(this.checkMove,this,500);
+        oBox.addEventListener('touchmove',handleTouchMove,false);
+
+    </script>
+</body>
+</html>
