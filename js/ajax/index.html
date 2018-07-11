@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div class="user-box">
+        <p class="username"></p>
+        <p class="desc"></p>
+    </div>
+    <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        // 数据的请求与页面的显示存在异步
+        // webserver http 访问，异步请求 json 文件
+        // 此 json 文件是 服务器上的一个文件，fetch 得到一个文件流
+
+        // js 请求数据的核心对象 --> xhr (XMLHTTPRequest)  
+        // js 主动请求数据的过程
+        // ajax 是 js 具有 web2.0 动态请求页面的能力
+        let xhr = null;
+        // js主动发送一次http请求 request,支持的数据交换格式 xml
+        if (window.XMLHttpRequest) {  //浏览器嗅探
+            xhr = new XMLHttpRequest();
+        } else {
+            xhr = new ActiveXObject("Microsoft.XMLHTTP");  // IE6 版本支持的 xhr 版本
+        }
+        // open 是 getJSON 的底层实现
+        // 建立连接
+        xhr.open('get','/user.json', true);   // get 明文请求，false | true 异步
+        // 发送请求
+        xhr.send();
+        // 一旦发送后，状态就会发生变化
+        xhr.onreadystatechange = function() {
+            console.log(xhr.readyState);
+            // 200 http 状态码，成功请求
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                console.log(xhr.responseText);   // 返回一个文本，类型为 String，不是json，如何转变为json? 
+                // JSON.parse() 将 文本 转变为 json , JSON.stringify() 将 json 转变为 文本
+                const zk = JSON.parse(xhr.responseText);
+                console.log(zk);
+            }
+        }
+
+        // fetch 方式获取：
+        // fetch('/user.json')  //fetch 是 Promise 封装过的一个 api
+        //     .then(data => data.json())  //将 fetch 到的二进制流转换成 json 格式
+        //     .then(data => {
+        //         console.log(data);
+        //     })
+
+        // jQuery 方式获取：
+        // 方法一：
+        // $(function() {
+        //     $.ajax({
+        //         url: 'user.json',
+        //         method: 'get',
+        //         success: function(jsonObj) {
+        //             console.log(jsonObj);
+        //         }
+        //     })
+        // })
+
+        // 方法二：(最简版  getJSON api)
+        // $(function(){
+        //     $.getJSON("/user.json",function(data){
+        //         console.log(data);
+        //         $('.username').html(data.name);
+        //         $('.desc').html(data.desc);
+        //     });
+        // });
+
+        // axios 方式：
+        //   .get('/user.json')
+        //   .then((data) => {
+        //     console.log(data);
+        //     })
+
+
+    </script>
+</body>
+</html>
