@@ -1,0 +1,12 @@
+{
+  "name": "try_eslint",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "eslint": "eslint *.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
