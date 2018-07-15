@@ -1,0 +1,11 @@
+{
+  "name": "vue-demo",
+  "version": "0.1.0",
+  "description": "掘金热门vue项目",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "cjq",
+  "license": "ISC"
+}
