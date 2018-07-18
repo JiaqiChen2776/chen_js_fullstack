@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import _ from 'lodash'
+import _ from 'lodash';
 import moment from 'moment';
 // 设定时区
 import 'moment/locale/zh-cn';
@@ -44,8 +44,6 @@ class Note extends Component {
             }></i>}
           </div>
         </div>
-        
-       
       </div>
     );
   }
