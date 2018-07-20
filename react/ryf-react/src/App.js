@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 // 对react ui 阿里的antd 部份引用
-import { Table, Pagination, Input, Row, Button, Modal, Form } from 'antd';
+import { Table, Pagination, Input, Row, Button, Modal, Form, message } from 'antd';
 import 'antd/dist/antd.css';
 import './App.css'
+import axios from 'axios'
 const { Search } = Input;
 const FormItem = Form.Item;
 const { confirm } = Modal;
@@ -73,7 +74,7 @@ class App extends Component {
     return (
       <div className="App">
         <Row>
-          <Search style={{width: 300}}/>
+          <Search style={{width: 300}} onChange={this.searchUser.bind(this)}/>
           <Button type="primary" style={{marginLeft: 20}} onClick={() => this.modal('add')}>添加用户</Button>
         </Row>
         <Row style={{paddingTop: 20}}>
@@ -107,6 +108,12 @@ class App extends Component {
       </div>
     );
   }
+  searchUser() {
+    axios.get('http://localhost:3006/user')
+      .then(data => {
+        console.log(data.data);
+      })
+  }
   // 删除用户
   remove (row) {
     const that = this
@@ -132,21 +139,35 @@ class App extends Component {
       
       if (!err) {
         // 表单验证通过
-        if (this.state.modalType === 'add')  {
-          this.state.users.push({
-            username,age,address,
-            id: _id
+        // if (this.state.modalType === 'add')  {
+        //   // 添加用户
+        //   this.state.users.push({
+        //     username,age,address,
+        //     id: _id
+        //   })
+        // } else {
+        //   // 编辑用户信息
+        //   this.state.users.forEach((item)=>{
+        //     if(item.id === this.state.editRow.id) {
+        //         item= Object.assign(item,values)
+        //     }
+        //   })
+        // }
+        
+        let data = {
+          username: values.username,
+          age: values.age,
+          address: values.address
+        };
+        console.log(data);
+        axios.post('http://127.0.0.1:3006/user', data)
+          .then(msg => {
+            console.log(msg);
+            this.setState({
+              visible: false,
+            });
+            message.success('添加成功');
           })
-        } else {
-          this.state.users.forEach((item)=>{
-            if(item.id === this.state.editRow.id) {
-                item= Object.assign(item,values)
-            }
-          })
-        }
-        this.setState({
-          visible: false,
-        })
       }
     })
   }
@@ -157,11 +178,13 @@ class App extends Component {
     }, () => {
       this.props.form.resetFields();
       if (type === 'add') return;
+      // setFieldsValue API  设置每个FormItem 的 value
       this.props.form.setFieldsValue({
         username: row.username,
         age: row.age,
         address: row.address
       })
+      // editRow 表示当前编辑的数据项
       this.setState({editRow: row})
     })
   }
