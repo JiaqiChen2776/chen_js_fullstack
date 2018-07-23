@@ -9,8 +9,7 @@ const User = sequelize.define('user', {
     username: {type: Sequelize.STRING},
     age: {type: Sequelize.INTEGER },
     address: { type: Sequelize.STRING },
-    isdelete: { type: Sequelize.INTEGER },
-    allowNull: true
+    isdelete: { type: Sequelize.INTEGER, allowNull: true } // 软删除，0为未删除
 });
 
 module.exports = User;

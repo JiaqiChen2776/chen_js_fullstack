@@ -13,7 +13,7 @@ app.use(cors({
   exposeHeaders: ['WWW-Authenticate','Server-Authenticate'],
   maxAge: 5,
   credentials: true,
-  allowMethods: ['GET','POST'],
+  allowMethods: ['GET','POST','OPTIONS'],
   allowHeaders: ['Content-Type','Authorization','Accept']
 
 }))

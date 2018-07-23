@@ -51,9 +51,33 @@ class App extends Component {
      
     ],
     modalType: "add",
-    id: 3,
-    editRow:{}
+    editRow:{},
+    current: 1,
+    size: 10,
+    total: 0,
+    search: ""
   }
+  // 生命周期
+  componentDidMount() {
+    this.sizeChange(this.state.current, this.state.size);
+  }
+  // 分页
+  sizeChange = (current, size) => {
+    let data = {
+      search: this.state.search,
+      limit: size,
+      offset: (parseInt(current) - 1) * size
+    }
+    axios.post("http://127.0.0.1:3006/user-search", data).then(data => {
+      this.setState({
+        dataSource: data.data.rows,
+        total: data.data.count,
+        current,
+        size
+      })
+    })
+  };
+
   render() {
     // 容器组件：将App包在Form内，export default Form.create()(App) 封装，this.props.form 拿出
     // 可在 react-dev-tool 中查看，最外层标签为 <Form(App)></Form(App)>
@@ -74,11 +98,11 @@ class App extends Component {
     return (
       <div className="App">
         <Row>
-          <Search style={{width: 300}} onChange={this.searchUser.bind(this)}/>
+          <Search style={{width: 300}} onChange={this.search.bind(this)}/>
           <Button type="primary" style={{marginLeft: 20}} onClick={() => this.modal('add')}>添加用户</Button>
         </Row>
         <Row style={{paddingTop: 20}}>
-          <Table dataSource={this.state.users} columns={this.columns} rowKey={row => row.id} bordered pagination={false}/>
+          <Table dataSource={this.state.dataSource} columns={this.columns} rowKey={row => row.id} bordered pagination={false}/>
         </Row>
         <Modal title={this.state.modalType === 'add' ? "添加用户" : "编辑用户"} visible={this.state.visible} onCancel={()=>this.setState({visible:false})} onOk= {()=> this.handleOk()}>
           <Form>
@@ -108,70 +132,107 @@ class App extends Component {
       </div>
     );
   }
-  searchUser() {
-    axios.get('http://localhost:3006/user')
-      .then(data => {
-        console.log(data.data);
-      })
-  }
   // 删除用户
-  remove (row) {
-    const that = this
+  remove = (row) => {
+    const that = this;
     confirm({
       title: '是否要删除用户',
       okText: '是',
       cancelText: '否',
       onOk () {
-        const _users = that.state.users.filter(data => {
-          return data.id !== row.id
-        })
-        that.setState({
-          users: _users
-        })
-      }
-    })
-  }
-  handleOk () {
-    // 验证表单API validateFieldsAndScroll 使用了 异步回调
-    this.props.form.validateFieldsAndScroll((err, values) => {
-      const {username, age, address} = values;
-      const _id = this.state.id++;
-      
-      if (!err) {
-        // 表单验证通过
-        // if (this.state.modalType === 'add')  {
-        //   // 添加用户
-        //   this.state.users.push({
-        //     username,age,address,
-        //     id: _id
-        //   })
-        // } else {
-        //   // 编辑用户信息
-        //   this.state.users.forEach((item)=>{
-        //     if(item.id === this.state.editRow.id) {
-        //         item= Object.assign(item,values)
-        //     }
-        //   })
-        // }
-        
-        let data = {
-          username: values.username,
-          age: values.age,
-          address: values.address
-        };
-        console.log(data);
-        axios.post('http://127.0.0.1:3006/user', data)
-          .then(msg => {
-            console.log(msg);
-            this.setState({
-              visible: false,
-            });
-            message.success('添加成功');
+        // const _users = that.state.users.filter(data => {
+        //   return data.id !== row.id
+        // })
+        // that.setState({
+        //   users: _users
+        // })
+        axios.delete("http://127.0.0.1:3006/user/" + row.id)
+          .then(data => {
+            that.sizeChange(that.state.current, that.state.size);
+            message.success('删除成功!')
           })
       }
     })
   }
-  modal (type, row) {
+  search= (name) => {
+    this.setState({
+      search: name
+    }, () => {
+      this.sizeChange(1,10)
+    })
+  };
+  handleOk = () => {
+    // 验证表单API validateFieldsAndScroll 使用了 异步回调
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      const {username, age, address} = values;
+      // const _id = this.state.users.length+1;
+      // const _id = new Date().getTime();
+      if (err) return;
+      let data = {
+        // id: _id,
+        username,
+        age,
+        address
+      };
+      if (this.state.modalType === 'add') {
+        axios.post("http://127.0.0.1:3006/user", data)
+          .then(msg => {
+            this.sizeChange(this.state.current, this.state.size)
+            this.setState({
+              visible: false
+            });
+            message.success('添加成功!');
+          })
+      } else {
+        axios.put("http://127.0.0.1:3006/user" + this.state.editRow.id, data)
+          .then(data => {
+            this.sizeChange(this.state.current, this.state.size);
+            this.setState({
+              visible: false
+            });
+            message.success('修改成功!');
+          })
+      }
+      // if (!err) {
+      //   // 表单验证通过
+      //   if (this.state.modalType === 'add')  {
+      //     // 添加用户
+      //     this.state.users.push({
+      //       id: _id,
+      //       username,
+      //       age,
+      //       address
+      //     })
+      //   } else {
+      //     // 编辑用户信息
+      //     this.state.users.forEach((item)=>{
+      //       if(item.id === this.state.editRow.id) {
+      //           item= Object.assign(item,values)
+      //       }
+      //     })
+      //   }
+      //   let data = {
+      //     id: _id,
+      //     username: values.username,
+      //     age: values.age,
+      //     address: values.address
+      //   };
+      //   console.log(data);
+      //   axios.post('http://127.0.0.1:3006/user', data)
+      //     .then(msg => {
+      //       console.log(msg);
+      //       this.setState({
+      //         visible: false,
+      //       });
+      //       message.success('添加成功');
+      //     })
+      //   this.setState({
+
+      //   })
+      // }
+    })
+  }
+  modal = (type, row) => {
     this.setState({
       visible: true,
       modalType: type
