@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <!-- <script>
+        fetch('http://localhost:3000/api')
+            .then(data => {
+                console.log(data);
+            })    
+    </script> -->
+    <script>
+        function ajax(params) {
+            params = params || {};  // 外界配置（get/post ...）
+            params.data = params.data || {};
+            // 支持 同源 还是 jsonp跨域
+            var json = params.jsonp ? jsonp(params) : json(params);
+
+            function jsonp(params) {}
+
+            function json(params) {
+                params.type = (params.type || 'GET').toUpperCase();   // 默认为 'GET',可不用配置
+                params.data = formatParams(params.data);
+                var xhr = null;
+                if (window.XMLHttpRequest) {
+                    xhr = new XMLHttpRequest();
+                } else {
+                    xhr = new ActiveXObject('Microsoft.XMLHTTP');
+                }
+
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4) {
+                        // readyState 请求状态：
+                        //     0 UNSENT （未打开） open()方法还未被调用
+                        //     1 OPENED （未发送） open()方法已被调用
+                        //     2 HEADERS_RECEIVED (已获取响应头) send()方法已被调用，响应头和响应状态已经返回
+                        //     3 LOADING (正在下载响应体) responseText中已经获取了部分数据
+                        //     4 DONE (请求完成) 整个请求过程已经完毕
+                        // readyState 为 4 表示 ajax 已完成到最后状态，可开始前端的回调
+                        var status = xhr.status;
+                        if (status >= 200 && status < 300) {
+                            // status 请求响应状态码                            
+                            // 200 ~ 300 的状态码都表示成功
+                            var response = JSON.parse(xhr.responseText);  // responseText 返回的数据
+                            params.success && params.success(response);
+                        }
+                    } else {
+                        params.error && params.error(status);
+                    }
+                }
+                if (params.type == 'GET') {
+                    // 支持传参
+                    xhr.open(params.type, params.url + '?' + params.data, true); // 最后一个参数表示异步请求（默认）
+                    xhr.send(null);
+                } else {
+                    xhr.open(params.type, params.url, true);
+                    // 给指定的HTTP请求头赋值.在这之前,你必须确认已经调用 open() 方法打开了一个url.
+                    // 请求类型：编码之后的表单请求，编码方式为 utf-8
+                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-rulencoded;charset=UTF-8');
+                    // 若此请求为异步模式，则立即调用 send() 方法
+                    // 注意: 若有事件绑定，所有相关的事件绑定必须在调用send()方法之前进行.
+                    xhr.send(params.data);
+                }
+            }
+            function formatParams(data) {
+                var arr = [];
+                for (var name in data) {
+                    // 中文不便传输 ，encodeURLComponent 编码，使传输更安全
+                    arr.push(encodeURIComponent(name) + '= ' + encodeURIComponent(data[name]));
+                }
+                // 同一个 ajax 请求，浏览器会缓存
+                // 利用 random 使每一次请求都不同
+                arr.push('v=' + random());
+                return arr.join('&');
+            }
+            function random () {
+                return Math.floor(Math.random() * 10000 + 500);
+            }
+        }
+        ajax({
+            // 传递一个配置项
+            url: '/data.json',
+            data: {
+                name: '富贵',
+            },
+            success: (data) => { console.log(data); },
+            error: (err) => { console.log(err); }
+        })
+    </script>
+    <script>
+        function callback(data) { 
+            console.log(data);
+        }
+    </script>
+    <script src="http://localhost:3000/api?jsonpcallback=callback"></script>
+</body>
+</html>
