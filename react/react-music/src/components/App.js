@@ -6,7 +6,9 @@ import { BrowserRouter as Router,Route, Switch, Redirect, NavLink } from 'react-
 
 import '@/assets/stylus/reset.styl';
 import './App.styl';
-import logo from '@/assets/imgs/logo.png'
+import logo from '@/assets/imgs/logo.png';
+import MusicPlayer from '@/components/play/MusicPlayer';
+
 class App extends Component {
   render() {
     return (
@@ -42,6 +44,7 @@ class App extends Component {
               <Route component={Recommend} />
             </Switch>
           </div>
+          <MusicPlayer />
         </div>
       </Router>
       
