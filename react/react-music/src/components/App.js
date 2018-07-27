@@ -5,6 +5,7 @@ import Search from './search/Search';
 import { BrowserRouter as Router,Route, Switch, Redirect, NavLink } from 'react-router-dom';
 
 import '@/assets/stylus/reset.styl';
+import '@/assets/stylus/font.styl';
 import './App.styl';
 import logo from '@/assets/imgs/logo.png';
 import MusicPlayer from '@/components/play/MusicPlayer';
