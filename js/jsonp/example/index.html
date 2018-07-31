@@ -20,7 +20,27 @@
             // 支持 同源 还是 jsonp跨域
             var json = params.jsonp ? jsonp(params) : json(params);
 
-            function jsonp(params) {}
+            function jsonp(params) {
+                // script 标签的动态构建
+                var callbackName = params.jsonp;
+                var head = document.getElementsByTagName('head')[0];
+                params.data['jsonpcallback'] = callbackName;
+                // 解析成查询字符串
+                var data = formatParams(params.data);
+                // 创建一个script 标签
+                var script = document.createElement('script');
+                // 挂载 标签
+                head.appendChild(script); 
+                // 新建一个全局的变量 callbackName
+                window[callbackName] = function(json) {
+                    // script 标签完成使命，进行垃圾回收
+                    head.removeChild(script);
+                    window[callbackName] = null;
+                    params.success && params.success(json);
+                }
+                // 访问地址的拼接
+                script.src = params.url + '?' + data
+            }
 
             function json(params) {
                 params.type = (params.type || 'GET').toUpperCase();   // 默认为 'GET',可不用配置
@@ -81,21 +101,31 @@
                 return Math.floor(Math.random() * 10000 + 500);
             }
         }
+        // ajax({
+        //     // 传递一个配置项
+        //     url: '/data.json',
+        //     data: {
+        //         name: '富贵',
+        //     },
+        //     success: (data) => { console.log(data); },
+        //     error: (err) => { console.log(err); }
+        // })
+    </script>
+
+    <script>
         ajax({
-            // 传递一个配置项
-            url: '/data.json',
-            data: {
-                name: '富贵',
-            },
-            success: (data) => { console.log(data); },
-            error: (err) => { console.log(err); }
+            jsonp: 'jsoncallback',
+            url: 'http://localhost:3000/api',
+            success: function(data) {
+                console.log(data);
+            }
         })
     </script>
-    <script>
+    <!-- <script>
         function callback(data) { 
             console.log(data);
         }
     </script>
-    <script src="http://localhost:3000/api?jsonpcallback=callback"></script>
+    <script src="http://localhost:3000/api?jsonpcallback=callback"></script> -->
 </body>
 </html>
