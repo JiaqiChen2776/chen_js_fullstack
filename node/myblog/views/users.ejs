@@ -1,0 +1,10 @@
+<%- include('header') %>
+<!-- html 模板，模板语法 ejs->node 后端模板 <% %> 套模板 -->
+<h1><%= name.toUpperCase() %></h1>
+<p>hello, <%= name %></p>
+<ul>
+  <% for (var i = 0;i < supplies.length; i++) { %>
+    <li><%= supplies[i] %></li>
+  <% } %>
+</ul>
+<%- include('footer') %>
