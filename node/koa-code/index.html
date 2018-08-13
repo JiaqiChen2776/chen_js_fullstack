@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Emitter</title>
+</head>
+<body>
+  <!-- 自定义事件 
+  除 click mousedown touchstart 等之外的自定义事件
+  js 是事件驱动的语言 -->
+  <script>
+    function Emitter() {
+      // 一个事件就是 events 这个json object 里的一个 key
+      this.events = {};
+    }
+    Emitter.prototype.on = function(type, cb) {
+      // cb 回调函数
+      var events = this.events;
+      events = events[type] = events[type] || [];
+      events.push(cb);
+      return this;  // 支持链式调用
+    }
+    Emitter.prototype.emit = function(type) {
+      var args = [].slice.call(arguments, 1);
+      var cbs = this.events[type];
+      // shift 保证事件执行顺序
+      while(cb = cbs && cbs.shift()) {
+        cb.apply(this, args);
+      }
+    }
+
+    var emitter = new Emitter();
+    emitter
+      .on('customEvent', function() {
+        alert(1);
+      })
+      .on('customEvent', function() {
+        alert(2);
+      })
+    console.log(emitter.events);
+    emitter.emit('customEvent', 'dsfds');
+  </script>
+</body>
+</html>
