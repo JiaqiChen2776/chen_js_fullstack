@@ -2,8 +2,8 @@ const Koa = require('koa');
 const path = require('path');
 // koa-bodyparser --> 异步处理 post 请求
 const bodyParser = require('koa-bodyparser');
-const MysqlStore = require('koa-mysql-session');
 const session = require('koa-session-minimal');
+const MysqlStore = require('koa-mysql-session');
 const router = require('koa-router');
 const ejs = require('ejs');
 const views = require('koa-views');
@@ -43,12 +43,15 @@ app.use(views(path.join(__dirname, './views'), {
   extension: 'ejs'
 }));
 
-app.use(bodyParser({
+app.use(bodyParser({ 
   formLimit: '1mb'
 }));
 
 app.use(require('./routes/posts.js').routes());
 app.use(require('./routes/signup.js').routes());
+app.use(require('./routes/signin.js').routes());
+app.use(require('./routes/signout.js').routes());
+
 
 app.listen(config.port);
 console.log(`listening on port ${config.port}`);
