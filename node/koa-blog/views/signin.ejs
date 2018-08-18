@@ -20,7 +20,7 @@
       $.ajax({
         url: '/signin',
         type: 'POST',
-        data: $('.form').serialize(),
+        data: $('form').serialize(),
         dataType: 'json',
         cache: false,
         success: msg => {

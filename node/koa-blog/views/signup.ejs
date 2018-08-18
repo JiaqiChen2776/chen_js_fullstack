@@ -1,4 +1,4 @@
-<%- include("header", {type: 'signup})%>
+<%- include("header", {type: 'signup'})%>
 <div class="container">
   <form method="post" class="form create">
     <div>
@@ -11,7 +11,7 @@
     </div>
     <div>
       <label>重复密码：</label>
-      <input type="password" name="password" placeholder="请确认密码">
+      <input type="password" name="repeatpass" placeholder="请确认密码">
     </div>
     <div>
       <label>上传头像：</label>
@@ -72,7 +72,7 @@
         data: {
           name: $('input[name=name]').val(),
           password: $('input[name=password]').val(),
-          repeatpass: $('inpu[nam=repeatpass]').val(),
+          repeatpass: $('input[name=repeatpass]').val(),
           avatar: $('#avatarVal').val()
         },
         dataType: 'json',
@@ -80,9 +80,9 @@
         success: function(msg) {
           if (msg.code == 200) {
             fade('注册成功');
-            // setTimeout(() => {
-            //   window.location.href = '/signin';
-            // }, 1000)
+            setTimeout(() => {
+              window.location.href = '/signin';
+            }, 1000)
           } else {
             fade(msg.message);
           }
