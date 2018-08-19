@@ -1,0 +1,21 @@
+{
+  "name": "umi-redux",
+  "version": "1.0.0",
+  "description": "安装准备：\r   yarn add babel-core babel-preset-env babel-preset-react -D\r   yarn add babel-cli",
+  "main": ".umirc.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "react-redux": "^5.0.7"
+  },
+  "dependencies": {
+    "umi": "^1.3.18"
+  }
+}
