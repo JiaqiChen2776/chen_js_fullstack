@@ -29,14 +29,23 @@ function objectFactory(){
     // console.log(arguments);  //{ '0': [Function: Otaku], '1': '鸠摩智', '2': 50 }
     // 获取 arguments 中的第一项，分解动作： 获取第一项，其余项都是参数
     // arguments 不具备数组的方法，需要借助数组--->  两种方法： [].shift.call(arguments)  或  Array.from(arguments)
+
+    // 1. Array.from(arguments)
+    // var arr = Array.from(arguments)
+    // var Constructor = arr.shift();
+
+    // 2. [].shift.call(arguments)
     var Constructor = [].shift.call(arguments);
-    // console.log(Constructor, arguments);
+
+    console.log(Constructor);
     var obj = new Object();
     obj.__proto__ = Constructor.prototype;
     // call() 与 apply() --> 区别： call() 传参必须每个都写出，apply()则不用
     // 在 apply 内部手动指定函数执行时的 this --> obj
     // Constructor(arguments);
-    Constructor.apply(obj, arguments);
+
+    // Constructor.apply(obj, arr);    // 方法一
+    Constructor.apply(obj, arguments);// 方法二
     return obj;
     // 1. 设置 obj 的 __proto__
     // 2. 得到构造函数上的 this 属性（要执行构造函数，传参数、要赋值、this 要指向当前对象）
