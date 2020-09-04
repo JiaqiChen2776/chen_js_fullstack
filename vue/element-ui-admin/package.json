@@ -15,7 +15,7 @@
     "font-awesome": "^4.7.0",
     "mockjs": "^1.0.1-beta3",
     "node-sass": "^4.9.0",
-    "showdown": "^1.8.6",
+    "showdown": "^1.9.1",
     "simplemde": "^1.11.2",
     "vue": "^2.5.2"
   },
