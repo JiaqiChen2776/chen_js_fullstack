@@ -27,7 +27,7 @@
     babel 的预处理，只是语法糖，class没有
     es5里没有的es6的语法，实现一遍，最基本的const...
     babel-core
-    plugins：还有一些没实现的 Obeject.assign(), promise, async
+    plugins：还有一些没实现的 Object.assign(), promise, async
         babel使用了一个新的概念 plugins 来实现
 
     要点总结：解决代码编译问题
