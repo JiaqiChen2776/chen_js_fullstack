@@ -73,9 +73,9 @@ promise2.then(console.log)
   .cancel()
 console.log('isCancelled:', promise2.isCancelled())
 
-// 7. 处理集合
+// 7. 批量处理
 /* 
-  1）all：接收一个异步操作数组，依次执行，任何一个操作错误都会导致结果Promise被拒绝
+  1) all：接收一个异步操作数组，依次执行，任何一个操作错误都会导致结果Promise被拒绝
   2) map：第一个参数为遍历的数组，第二个参数为异步处理函数
   3) mapSeries：与map类似，按数组顺序依次执行
   4) some：第一个参数为异步操作数组，第二个为Promise完成数量（达到则返回），结果为一个数组
@@ -88,4 +88,55 @@ console.log('isCancelled:', promise2.isCancelled())
   11) method：用来封装一个方法，使其返回 Promise
   12) try：用来封装可能产生问题的方法调用，并根据调用结果来决定 Promise 的状态
 */
+
+// 8. 结果处理
+/*
+  1) call: 调用结果对象中的方法
+  2) get: 获取结果对象中的属性
+  3) return: 改变结果
+  4) throw: 抛出错误
+  5) catchReturn: 捕获错误后，改变结果
+  6) catchThrow: 捕获错误后，抛出新的错误
+  7) tap: 查看结果
+  8) tapCatch: 查看错误
+*/
+
+
+// 9. 全局错误捕获
+/*
+  1) unhandledRejection: 拒绝错误未被处理时触发
+  2) rejectionHandled: 发生拒绝错误时触发
+  3) onPossiblyUnhandledRejection: 添加对于未处理的拒绝错误的默认处理方法
+  4) suppressUnhandledRejections: 忽略未处理的拒绝错误
+*/
+
+// 10. 定时器
+/*
+  1) delay: 延迟执行
+  2) timeout: 在指定时间内未执行完，则抛出TimeoutError错误
+*/
+
+// 11. 资源管理
+/*
+  1) using
+  2) disposer
+*/
+class Connection {
+ query() {
+   return _Promise.resolve('query');
+ }
+ close() {
+   console.log('close');
+ }
+}
+
+class DB {
+ connect() {
+   return _Promise.resolve(new Connection());
+ }
+}
+
+const disposer = new DB().connect().disposer(connection => connection.close());
+_Promise.using(disposer, connection => connection.query())
+ .then(console.log).catch(console.error);
 
