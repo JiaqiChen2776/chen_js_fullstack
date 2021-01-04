@@ -56,13 +56,13 @@ body .svg-btn-box:hover svg path {
   -moz-stroke-dashoffset: 510%;
 }
 
-.svg-btn-box-2 {
+.svg-btn-circle {
   position: relative;
   width: 100px;
   height: 100px;
   cursor: pointer;
 }
-.svg-btn-box-2 svg circle {
+.svg-btn-circle svg circle {
   stroke-width: 2px;
   stroke: #ff485b;
   fill: #999999;
@@ -76,7 +76,7 @@ body .svg-btn-box:hover svg path {
   -moz-stroke-dasharray: 252, 252;
   -moz-stroke-dashoffset: 232;
 }
-.svg-btn-box-2:hover svg circle {
+.svg-btn-circle:hover svg circle {
   stroke-dasharray: 252, 252;
   stroke-dashoffset: 0;
   -o-stroke-dasharray: 252, 252;
