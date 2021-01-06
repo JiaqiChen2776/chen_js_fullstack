@@ -37,4 +37,18 @@ var Color;
     Color[Color["blue"] = 3] = "blue";
 })(Color || (Color = {}));
 var color = Color.green;
-console.log(arr1, arr2, color);
+var colorName = Color[2];
+var a = 4;
+a = a.toFixed(2);
+a = 'b';
+var b = undefined;
+var c = null;
+function func(val) {
+    if (val.length) {
+        return val.length;
+    }
+    else {
+        return val.toString().length;
+    }
+}
+console.log(arr1, arr2, color, colorName, a, b, c, func(123), func('123'));

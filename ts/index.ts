@@ -37,7 +37,23 @@
 
 let arr1: number[] = [1, 2, 3]
 let arr2: Array<number> = [4, 5, 6]
-enum Color{ red = 1, green = 2, blue = 3 }
+enum Color{ red = 1, green, blue }
 let color: Color = Color.green
+let colorName: string = Color[2]
 
-console.log(arr1, arr2, color)
+let a: any = 4
+a = a.toFixed(2)
+a = 'b'
+
+let b: undefined = undefined
+let c: null = null
+
+function func(val: string | number): number {
+  if ((val as string).length) {
+    return (val as string).length
+  } else {
+    return val.toString().length
+  }
+}
+
+console.log(arr1, arr2, color, colorName, a, b, c, func(123), func('123'))
