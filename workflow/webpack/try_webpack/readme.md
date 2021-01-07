@@ -24,6 +24,7 @@ webpack 配置： webpack.config.js
     path.resolve  系统路径
 
 3、loader
+- 样式打包
     在entry 和 ouput 之间，进行文件引用 顺序打包文件，依赖
     引入了样式文件后，使用 loader 的方式来编译/处理/打包 style.less
 
@@ -39,6 +40,25 @@ webpack 配置： webpack.config.js
     }
 
     打包后：将 css 打包到了 js 中，如何分开打包，使用 plugin.
+
+- 图片压缩
+    安装：yarn add image-webpack-loader -D
+    配置：
+    module: {
+        rules: [
+            {
+            test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+            use: [
+                {
+                    loader: 'image-webpack-loader',
+                    options: { 
+                        bypassOnDebug: true 
+                    }
+                }
+            ]
+        }
+        ]
+    }
 
 4、plugin
     安装：yarn add extract-text-webpack-plugin -D
