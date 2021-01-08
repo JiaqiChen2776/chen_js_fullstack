@@ -36,6 +36,7 @@ enum Color{ red = 1, green, blue }
 let color: Color = Color.green    // 2
 let colorName: string = Color[2]  // green
 ```
+注：没有设置值时，默认为下标；上一个值为数字时，当前值默认为上一值+1；上一值为非数字时，必须设置当前值。
 
 - Any
 可移除类型检查
@@ -45,7 +46,7 @@ a = '张三'  // ok
 ```
 
 - Void
-无类型，函数无返回值时其返回值类型为`void`，变量类型为`void`时，只能将`undefined`及`null`赋值给它
+无类型，函数无返回值时，其返回值类型为`void`，变量类型为`void`时，只能将`undefined`及`null`赋值给它
 
 - null/undefined
 所有类型的子类型，可将其赋值给其他类型（如number）。编译时指定`--strictNullChecks`，则只能赋值给void及其本身。
@@ -84,7 +85,13 @@ function func(val: string | number): number {
   }
 }
 ```
-
+联合类型可定义
+```typescript
+type Combinable = string | number
+function func(val: Combinable): number {
+  // ...
+}
+```
 
 ### 接口
 接口可定义数据的结构及类型
@@ -122,4 +129,72 @@ function greeter(person: Person) {
 let user = new Student("张三", 18)  
 console.log(greeter(user))
 ```
+
+### 函数
+#### 声明及传参
+```typescript
+function getInfo(name: string, age?: number, hometown: string = '北京'): string {
+  return `I am ${name}, I'm ${age} years old, I come from ${hometown}`
+}
+```
+注：参数及返回值可指定类型；?表示此参数可不传，默认为`undefined`，可设置默认值。
+
+#### 剩余参数
+未定义的剩余参数可转换为数组
+```typescript
+function getSum(num1: number, num2: number, ...arr: number[]) {
+  let sum: number = num1 + num2
+  arr.forEach(i => sum += i )
+  return sum
+}
+```
+
+#### 重载
+当函数参数涉及到联合类型时，对不同类型的参数可能会有不同的处理，使用函数重载可更好地判断参数。<br>
+1. 函数重载
+```typescript
+type Combinable = string | number
+function add(a: Combinable, b: Combinable) {
+  if (typeof a === 'string' || typeof b === 'string') {
+    return a.toString() + b.toString();
+  }
+  return a + b;
+}
+const result = add('1', 2)
+result.split(' ')
+```
+最后一句将编译出错，因为add返回类型有可能为`number`，而`number`没有`split`方法。<br>
+解决：为同一个函数提供多个函数类型定义来进行函数重载，编译器会根据这个列表去处理函数的调用。
+```typescript
+function add(a: number, b: number): number;
+function add(a: string, b: string): string;
+function add(a: string, b: number): string;
+function add(a: number, b: string): string;
+function add(a: Combinable, b: Combinable) {
+  if (typeof a === 'string' || typeof b === 'string') {
+    return a.toString() + b.toString();
+  }
+  return a + b;
+}
+const result = add('1', 2)
+result.split(' ')
+```
+注：此处定义了四个重载方法，调用函数时，将查找重载列表，查到匹配的则使用，所以可能性最高的重载方法应放在最前面。
+
+2. 方法重载：同一类中方法同名
+3. 构造函数重载
+4. 特定重载签名
+<br>
+可利用签名来创建参数名称、类型、数量都相同，但返回类型不同的多个函数
+```typescript
+// typescript/lib/lib.dom.d.ts
+createEvent(eventInterface: "KeyboardEvent"): KeyboardEvent; // 特定重载签名
+createEvent(eventInterface: "MouseEvent"): MouseEvent; // 特定重载签名
+createEvent(eventInterface: "TouchEvent"): TouchEvent; // 特定重载签名
+createEvent(eventInterface: string): Event; // 非特定重载签名
+```
+
+
+
+
 
