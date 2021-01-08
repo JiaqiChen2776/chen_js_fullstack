@@ -47,16 +47,16 @@ webpack 配置： webpack.config.js
     module: {
         rules: [
             {
-            test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-            use: [
-                {
-                    loader: 'image-webpack-loader',
-                    options: { 
-                        bypassOnDebug: true 
+                test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+                use: [
+                    {
+                        loader: 'image-webpack-loader',
+                        options: { 
+                            bypassOnDebug: true 
+                        }
                     }
-                }
-            ]
-        }
+                ]
+            }
         ]
     }
 
