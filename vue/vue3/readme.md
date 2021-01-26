@@ -101,6 +101,46 @@ export default {
   }
 }
 ```
-reactive: 响应式数据。
 
+#### reactive 
+响应式数据：接收一个对象然后返回该对象的响应式代理。等同于Vue2.x的`Vue.observable()`，若要对一个单独的变量使用响应式，可使用`ref`。
+两种返回形式：
+1. 如上代码所示，声明`state`并返回，使用时需要`state.name`
+2. 引用`toRefs`，返回时用`...`展开
+```js
+import { reactive, toRefs } from 'vue';
 
+export default defineComponent({
+  setup () {
+    const state = reactive({ 
+      name: '张三' 
+    })
+    return { ...toRefs(state) }
+  }
+})
+```
+
+#### toRefs 
+响应式对象转为普通对象，该普通对象的每个 property 都是一个 ref ，和响应式对象 property 一一对应。
+> 若`reactive`返回的对象内嵌套了多层的对象，那嵌套的对象就不是响应式的，用`toRefs`处理后，整个对象的所有属性都是响应式的。
+
+#### ref
+接收一个参数值并返回一个响应式可改变的对象，其中包含了一个指向内部值的属性`value`。
+```js
+const age = ref(18)
+age++     // 可改变
+console.log(age.value)  // 19
+```
+
+#### toRef
+可为一个`reactive`对象的属性创建一个ref，此ref可被传递并保持响应。
+```js
+const state = reactive({
+  name: '张三',
+})
+const nameRef = toRef(state, 'name')
+nameRef = '李四'
+
+console.log(nameRef)  // 李四
+console.log(state.name)  // 李四
+```
