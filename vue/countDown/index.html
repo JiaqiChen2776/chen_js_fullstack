@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="root">
+      <div class="box">
+        <span>{{ info.day }}</span>
+        <span>天</span>
+        <span>{{ info.hour > 9 ? info.hour : '0' + info.hour }}</span>
+        <span>时</span>
+        <span>{{ info.minute > 9 ? info.minute : '0' + info.minute }}</span>
+        <span>分</span>
+        <span>{{ info.second > 9 ? info.second : '0' + info.second }}</span>
+        <span>秒</span>
+    
+        <p>{{ timeInfo }}</p>
+      </div>
+    </div>
+    <script src="https://cdn.bootcss.com/vue/2.5.16/vue.min.js"></script>
+    <script>
+        const vm = new Vue({
+          el: '#root',
+          data() {
+            return {
+              info: {
+                day: 0,
+                hour: 0,
+                minute: 0,
+                second: 0
+              },
+              startTime: '2021/02/01 00:00:00',
+              endTime: '2021/02/16 23:30:59',
+              timeInfo: '未开始',
+              countDownInterval: null
+            }
+          },
+          created() {
+            let _now = Math.floor(new Date().getTime() / 1000)
+            let _start = Math.floor(new Date(this.startTime).getTime() / 1000)
+            let _end = Math.floor(new Date(this.endTime).getTime() / 1000)
+            let gap = _end - _now
+            if (_start > _now) return
+            if (gap <= 0) {
+              this.timeInfo = '已结束'
+              return
+            }
+            this.timeInfo = '进行中'
+            this.info.day = Math.floor(gap / (60 * 60 * 24))
+            this.info.hour = Math.floor((gap / (60 * 60)) % 24) 
+            this.info.minute = Math.floor((gap / 60) % 60)
+            this.info.second = Math.floor(gap % 60)
+            this.countDown()
+          },
+          methods: {
+            countDown() {
+              this.countDownInterval = setInterval(() => {
+                if (this.info.second > 0) {
+                  this.info.second--
+                } else if (this.info.minute > 0) {
+                  this.info.minute--
+                  this.info.second = 59
+                } else if (this.info.hour > 0) {
+                  this.info.hour--
+                  this.info.minute = this.info.second = 59
+                } else if (this.info.day > 0) {
+                  this.info.day--
+                  this.info.hour = 23
+                  this.info.minute = this.info.second = 59
+                } else {
+                  this.info.minute = 0
+                  this.timeInfo = '已结束'
+                  clearInterval(this.countDownInterval)
+                }
+              }, 1000)
+            }
+          }
+        });
+    </script>
+</body>
+</html>
