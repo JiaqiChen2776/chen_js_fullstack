@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="css.css">
+</head>
+<body>
+    <div id="root">
+      <div>
+        <div class="box" id="box1">box1</div>
+        <div class="box2-parent">
+          <div class="box2-parent2">
+            <div class="box" id="box2">box2</div>
+          </div>
+        </div>
+        <div class="box" id="box3">box3</div>
+        <div class="box" id="box4">box4</div>
+        <div class="box" id="box5">box5</div>
+    
+        <div class="opt-sec">
+          <input type="text" v-model="idName" />
+          <button @click="scroll">跳转</button>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.bootcss.com/vue/2.5.16/vue.min.js"></script>
+    <script>
+        const vm = new Vue({
+          el: '#root',
+          data() {
+            return {
+              idName: "",
+              scrollTop: 0
+            };
+          },
+          methods: {
+            scroll() {
+              if (!this.idName) return;
+
+              let that = this;
+              let dom = document.getElementById(this.idName)
+              // 当前滚动位置
+              that.scrollTop = window.pageYOffset ||
+                document.documentElement.scrollTop ||
+                document.body.scrollTop
+              if (!dom) return;
+
+              // 文档高度
+              let docH = document.body.offsetHeight
+              // 视口高度
+              let clientH = document.documentElement.clientHeight
+              // 元素在文档中的定位位置
+              let val = this.getTop(dom)
+              // 控制向下/向上滚动，1向下，-1向上
+              let sign = val - that.scrollTop >= 0 ? 1 : -1
+              // 将总距离分成的等份数，越大滚动越慢
+              let speed = 300
+              // 当前移动距离
+              let currentDistance = 0
+              // 总移动距离
+              let initDistance =  Math.abs(that.scrollTop - val)
+              // dom定位点位于最后一屏，总移动距离需减去定位点到视口的距离
+              let restH = docH - val
+              if (restH < clientH) {
+                initDistance = initDistance - (clientH - restH)
+              }
+              // 无需移动
+              if (initDistance === 0) return
+
+              // 每等份的px
+              let eachDistance = Math.ceil(initDistance / speed)
+              let initTimes = 1
+
+              const scrollFunc = () => {
+                if (currentDistance >= initDistance) return
+                
+                // requestAnimationFrame() 执行一个动画，并且要求浏览器在下次重绘之前调用指定的回调函数更新动画
+                window.requestAnimationFrame(scrollFunc)
+
+                let ispeed = eachDistance * initTimes++
+                let distance = Math.floor(Math.min(ispeed, initDistance - currentDistance))
+                currentDistance += distance
+                document.documentElement.scrollTop = document.body.scrollTop = that.scrollTop = that.scrollTop + (sign * distance)
+              }
+              scrollFunc()
+            },
+            getTop(ele) {
+              let _top = ele.getBoundingClientRect ?
+                ele.getBoundingClientRect().top + this.scrollTop :
+                this.getElementTop(ele)
+              return _top
+            },
+            getElementTop(ele) {
+              var actualTop = ele.offsetTop;
+              var current = ele.offsetParent;
+              while (current !== null) {
+                actualTop += current.offsetTop;
+                current = current.offsetParent;
+              }
+              return actualTop;
+            }
+          }
+        });
+    </script>
+</body>
+</html>
