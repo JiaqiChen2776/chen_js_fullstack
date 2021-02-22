@@ -11,6 +11,10 @@ TypeScript是JavaScript的超集
 <br>
 编译出错仍可生成js文件
 
+### 运行
+- 安装`ts-node`：`npm install -g ts-node`
+- 运行：ts-node file.ts
+
 ### 基础类型
 - boolean
 - number
