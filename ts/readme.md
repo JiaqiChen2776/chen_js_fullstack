@@ -330,7 +330,7 @@ chen.name = 'chenjiaqi' // Error
 ```
 
 8. 抽象类
-抽象类就是每个继承它的类都必须实现其中的抽象方法，抽象类及其抽象方法都用`abtract`开头。
+抽象类就是每个继承它的类都必须实现其中的抽象方法，抽象类及其抽象方法都用`abstract`开头。
 ```typescript
 abstract class Developer {
   abstract skill()
