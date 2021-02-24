@@ -256,7 +256,7 @@
 
 // 抽象类
 abstract class Developer {
-  abstract skill()
+  abstract skill(): any
 }
 class WebDeveloper extends Developer {
   skill() {

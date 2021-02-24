@@ -2,18 +2,26 @@
 TypeScript是JavaScript的超集
 
 ## 安装
+<hr>
+
 - `npm install -g typescript`
 - 安装Visual Studio的TypeScript插件
 
 ## 使用
+<hr>
+
 ### 编译
 命令行`tsc file.ts`，即可生成`file.js`编译后的文件
-<br>
-编译出错仍可生成js文件
+- 编译出错仍可生成js文件
+- 监视：`tsc -w`，检测到文件变化后自动进行编译
+
+<hr>
 
 ### 运行
 - 安装`ts-node`：`npm install -g ts-node`
 - 运行：ts-node file.ts
+
+<hr>
 
 ### 基础类型
 - boolean
@@ -98,28 +106,7 @@ let colorName: string = Color[2]  // green
 - Object
 非原始类型
 
-- 类型断言
-表示不进行数据检查及解构，事先为变量选择一种类型。两种方式：`<类型>值` | `值 as 类型`， jsx 这样的语法中只支持 as 方式。
-```typescript
-function func(val: string | number): number {
-  if (val.length) {
-    return val.length
-  } else {
-    return val.toString().length
-  }
-}
-```
-如上所示，参数`val`是一个联合类型，可为`string`及`number`，而访问联合类型值的属性时，必须是所有可能类型共有的属性，而`val`为`string`时，没有`length`属性，所以编译不通过。使用类型断言则可编译通过。
-```typescript
-function func(val: string | number): number {
-  if ((val as string).length) {
-    return (val as string).length
-  } else {
-    return val.toString().length
-  }
-}
-```
-联合类型可定义
+- 联合类型
 ```typescript
 type Combinable = string | number
 function func(val: Combinable): number {
@@ -133,6 +120,8 @@ const zhangSan: () => string = () => {
   return '张三'
 }
 ```
+
+<hr>
 
 ### 接口
 1. 接口可定义数据的结构及类型，参数可为函数类型，参数可选时加`?`
@@ -210,6 +199,7 @@ chen.hair = 'short'
 chen.subject = 'math'
 ```
 
+<hr>
 
 ### 类
 1. 创造类
@@ -351,6 +341,7 @@ console.log(chen.skill())
 console.log(wu.skill())
 ```
 
+<hr>
 
 ### 函数
 #### 声明及传参
@@ -439,4 +430,168 @@ res.split(' ')
 - [Typescript 常见的几种函数重载方法详解与应用示例](https://blog.csdn.net/weixin_30681615/article/details/96225259)
 
 
+<hr>
 
+### 配置文件`tsconfig.json`
+
+#### 使用配置文件
+- 创建`tsconfig.json`：tsc --init
+- 编译：tsc，即可编译根目录下所有ts文件
+- `ts-node`也遵循配置文件
+
+#### 配置项
+- `include`：要编译的文件、文件夹；可以使用相对路径、绝对路径，还可使用通配符。
+- `exclude`：要排除的文件、文件夹，规则同`include`。
+- `files`：要包含的文件，文件名必须用双引号，files与include的区别在于files不可用通配符。
+- `complilerOptions`配置项：
+  - `removeComments`：移除注释
+  - `strict`：严格模式
+  - `noImplicitAny`：为true时表示，就算类型为any，也要注解
+  - `strictNullChecks`：为true，表示强制检查null类型
+  - `rootDir`：起始编译目录
+  - `outDir`：编译输出目录
+  - `outFile`：编译输出文件，将所有文件编译成一个文件；配置后不再支持`"module": "commonjs"`，需改成`"module": "amd"`
+  - `target`：编译目标
+  - `allowJs`：是否编译js文件，可编译es6
+  - `sourceMap`：为true时会生成`sourceMap`信息文件，存储位置信息，代码出错时可定位到编译前的出错位置
+  - `noUnusedLocals`：不允许存在没有被使用的常量/变量/方法
+  ```ts
+  // 会提示错误
+  const chen: string = null;
+  export const name = "chen";
+  ```
+  - `noUnusedParameters`：不允许存在没有被使用的参数
+
+[其它配置：https://www.tslang.cn/docs/handbook/compiler-options.html](https://www.tslang.cn/docs/handbook/compiler-options.html)
+
+
+<hr>
+
+### 联合类型及类型保护
+#### 联合类型
+联合类型就是一个变量有两种或以上可能的类型
+```ts
+type CombineType = string | number | boolean
+```
+
+#### 类型保护
+1. 类型断言
+表示不进行数据检查及解构，事先为变量选择一种类型。两种方式：`<类型>值` | `值 as 类型`， jsx 这样的语法中只支持 as 方式。
+```typescript
+function func(val: string | number): number {
+  if (val.length) {
+    return val.length
+  } else {
+    return val.toString().length
+  }
+}
+```
+如上所示，参数`val`是一个联合类型，可为`string`及`number`，而访问联合类型值的属性时，必须是所有可能类型共有的属性，而`val`为`string`时，没有`length`属性，所以编译不通过。使用类型断言则可编译通过。
+```typescript
+function func(val: string | number): number {
+  if ((val as string).length) {
+    return (val as string).length
+  } else {
+    return val.toString().length
+  }
+}
+```
+
+2. `in`语法
+用`in`判断对象中是否有此属性/方法，有则使用
+
+3. `typeof``instanceof`语法
+用`typeof`判断类型，`instanceof`同理
+```typescript
+function func(val: string | number): number {
+  if (typeof val === 'string') {
+    return (val as string).length
+  } else {
+    return val.toString().length
+  }
+}
+```
+
+<hr>
+
+### 泛型
+[参见“generics.md”](./generics.md)
+
+<hr>
+
+### 命名空间
+命名空间相当于模块化，可将某些类或变量隐藏起来，避免造成全局污染。
+示例：
+```ts
+namespace Home {
+  class Header {
+    constructor() {
+      console.log('Header')
+    }
+  }
+  class Content {
+    constructor() {
+      console.log('Content')
+    }
+  }
+  class Footer {
+    constructor() {
+      console.log('Footer')
+    }
+  }
+  export class Page {
+    constructor() {
+      new Header()
+      new Content()
+      new Footer()
+    }
+  }
+}
+
+// 只可访问Page类，Header、Content、Footer都被隐藏起来了
+new Home.Page()
+```
+注：可利用命名空间封装组件。
+
+- 子命名空间：命名空间可嵌套
+ ```ts
+namespace Components {
+  export namespace subComponents {
+    export class Page {}
+  }
+}
+// 使用
+Components.subComponents.Page
+ ```
+
+ <hr>
+
+### `import`语法
+- 创建模块并`export`输出
+```ts
+// components.ts
+export class Header {
+  constructor() {
+    console.log('Header')
+  }
+}
+```
+- 引入模块
+```ts
+// page.ts
+import { Header } from './components'
+
+export default class Page {
+  constructor() {
+    new Header()
+  }
+}
+```
+编译后生成amd 规范的代码，不可直接在浏览器中运行，可在node中运行，引入`require.js`后可支持。
+`require.js`可解析amd规范的代码，浏览器引入模块方式如下：
+```js
+// index.html
+require(["page"], function (page) {
+  new page.default();
+});
+```
