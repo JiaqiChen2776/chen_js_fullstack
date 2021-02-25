@@ -595,3 +595,29 @@ require(["page"], function (page) {
   new page.default();
 });
 ```
+
+<hr>
+
+### 在Typescript中使用其他类库
+如`JQuery`
+1. script标签引入
+引入jq库后，在使用的ts文件中声明$——`declare var $: (selector: string) => any;`即可使用并且不报错
+
+2. typings
+- 安装`typings`：`npm install -g typings`
+- 搜索jquery库：`typings search jquery`
+- 安装ts的jquery库：`typings install dt~jquery --global`
+- 安装js的jquery库：`npm install jquery --save`
+```ts
+import $ from 'jquery'
+console.log($)
+```
+注：安装js的jquery库后，在开发环境的ts中可使用了，但会有错误提示，使用typings安装jquery后就无错误提示了。
+
+3. @types/jquery
+- 安装`@types/jquery`：`npm install --save-dev @types/jquery`
+- 安装js的jquery库：`npm install jquery --save`
+```ts
+import $ from 'jquery'
+console.log($)
+```
