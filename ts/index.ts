@@ -255,22 +255,62 @@
 
 
 // 抽象类
-abstract class Developer {
-  abstract skill(): any
+// abstract class Developer {
+//   abstract skill(): any
+// }
+// class WebDeveloper extends Developer {
+//   skill() {
+//     return ['js', 'html', 'css', 'vue']
+//   }
+// }
+// class DatabaseDeveloper extends Developer {
+//   skill() {
+//     return ['mysql', 'redis', 'linux']
+//   }
+// }
+
+// let chen = new WebDeveloper()
+// let wu = new DatabaseDeveloper()
+// console.log(chen.skill())
+// console.log(wu.skill())
+// -----------------------------------------------
+
+
+// 泛型
+function createArr<T>(length: number, value: T): Array<T> {
+  let result: T[] = [];
+    for (let i = 0; i < length; i++) {
+        result[i] = value;
+    }
+    return result;
 }
-class WebDeveloper extends Developer {
-  skill() {
-    return ['js', 'html', 'css', 'vue']
-  }
+console.log(createArr(3, 'x'))
+console.log(createArr<number>(3, 1))
+
+
+function person<N, A>(name: N, age: A): [A, N] {
+  return [age, name]
 }
-class DatabaseDeveloper extends Developer {
-  skill() {
-    return ['mysql', 'redis', 'linux']
-  }
+console.log(person('chen', 18))
+
+
+interface SearchFunc {
+  (source: string, subString: string): boolean;
 }
 
-let chen = new WebDeveloper()
-let wu = new DatabaseDeveloper()
-console.log(chen.skill())
-console.log(wu.skill())
+let mySearch: SearchFunc = function(source: string, subString: string) {
+    return source.search(subString) !== -1;
+}
 
+console.log(mySearch('abcd', 'bc'))
+
+
+
+class GenericNumber<T> {
+  zeroValue: T;
+  add: (x: T, y: T) => T;
+}
+
+let myGenericNumber = new GenericNumber<number>();
+myGenericNumber.zeroValue = 0;
+myGenericNumber.add = function(x, y) { return x + y; };
