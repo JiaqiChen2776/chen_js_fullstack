@@ -277,40 +277,162 @@
 
 
 // 泛型
-function createArr<T>(length: number, value: T): Array<T> {
-  let result: T[] = [];
-    for (let i = 0; i < length; i++) {
-        result[i] = value;
-    }
-    return result;
+// function createArr<T>(length: number, value: T): Array<T> {
+//   let result: T[] = [];
+//     for (let i = 0; i < length; i++) {
+//         result[i] = value;
+//     }
+//     return result;
+// }
+// console.log(createArr(3, 'x'))
+// console.log(createArr<number>(3, 1))
+
+
+// function person<N, A>(name: N, age: A): [A, N] {
+//   return [age, name]
+// }
+// console.log(person('chen', 18))
+
+
+// interface SearchFunc {
+//   (source: string, subString: string): boolean;
+// }
+
+// let mySearch: SearchFunc = function(source: string, subString: string) {
+//     return source.search(subString) !== -1;
+// }
+
+// console.log(mySearch('abcd', 'bc'))
+
+
+
+// class GenericNumber<T> {
+//   zeroValue: T;
+//   add: (x: T, y: T) => T;
+// }
+
+// let myGenericNumber = new GenericNumber<number>();
+// myGenericNumber.zeroValue = 0;
+// myGenericNumber.add = function(x, y) { return x + y; };
+
+
+// 泛型接口
+// interface CreateArray<T = string> {
+//   (length: number, value: T): Array<T>;
+// }
+
+// let create: CreateArray;
+// create = function<T>(length: number, value: T): Array<T> {
+//   let result: any[] = [];
+//     for (let i = 0; i < length; i++) {
+//         result[i] = value;
+//     }
+//     return result;
+// }
+
+// console.log(create(3, 'x'))
+// -----------------------------------------------
+
+
+// class AddFunc<T> {
+//   init: T;
+//   add: (x: T, y: T) => T
+// }
+// let myAddFunc = new AddFunc<number>()
+// myAddFunc.init = 1
+// myAddFunc.add = function(x, y) {
+//   return this.init + x + y
+// }
+// console.log(myAddFunc.add(2, 3))
+// -----------------------------------------------
+
+
+// 泛型约束
+// class Test {
+//   init= 1;
+// }
+// function create<T>(c: {new(): T}): T {
+//   return new c()
+// }
+// let testVal = create(Test)
+// console.log(testVal)
+// -----------------------------------------------
+
+
+// keyof
+// interface Person {
+//   name: string;
+//   age: number;
+//   location: string; }
+//  type K1 = keyof Person; // "name" | "age" | "location"
+//  type K2 = keyof Person[]; // number | "length" | "push" | "concat" | ...
+//  type K3 = keyof { [x: string]: Person }; // string | number
+
+
+// function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {
+//   return obj[key];
+// }
+// let x = {a: 1, b: 2, c: 3}
+// getProperty(x, 'a')
+// -----------------------------------------------
+
+
+// 泛型条件类型
+// interface Dictionary<T = any> {
+//   [key: string]: T
+// }
+
+// type StrDict = Dictionary<number>
+// type DictNumber<T> = T extends Dictionary<infer V> ? V : never
+// type StrDictNumber = DictNumber<StrDict>
+
+// async function stringPromise() {
+//   return "Hello, Semlinker!"; 
+// }
+// interface Person {
+//   name: string;
+//   age: number; 
+// }
+// async function personPromise() {
+//   return { name: "Semlinker", age: 30 } as Person; 
+// }
+
+// type PromiseType<T> = (args: any[]) => Promise<T>;
+// type UnPromisify<T> = T extends PromiseType<infer U> ? U : never;
+// type extractStringPromise = UnPromisify<typeof stringPromise>; // string
+// type extractPersonPromise = UnPromisify<typeof personPromise>; // Person
+
+// console.log(typeof stringPromise, typeof personPromise)
+// -----------------------------------------------
+
+
+// in
+// type Keys = "a" | "b" | "c"
+// type Obj = {
+//   [p in Keys]: any
+// }
+// -----------------------------------------------
+
+// infer
+// function TestFunc() {
+//   return 123
+// }
+// type Ha = typeof TestFunc
+// type GetReturnType<T> = T extends (...args: any[]) => infer R ? R : any;
+// type Test = GetReturnType<typeof TestFunc>
+// -----------------------------------------------
+
+
+// Partial
+interface Person {
+  name: string;
+  age: number;
 }
-console.log(createArr(3, 'x'))
-console.log(createArr<number>(3, 1))
 
+type TestPerson = Partial<Person>
 
-function person<N, A>(name: N, age: A): [A, N] {
-  return [age, name]
+const yourInfo: Person = {
+  name: 'wu',
+  age: 18
 }
-console.log(person('chen', 18))
-
-
-interface SearchFunc {
-  (source: string, subString: string): boolean;
-}
-
-let mySearch: SearchFunc = function(source: string, subString: string) {
-    return source.search(subString) !== -1;
-}
-
-console.log(mySearch('abcd', 'bc'))
-
-
-
-class GenericNumber<T> {
-  zeroValue: T;
-  add: (x: T, y: T) => T;
-}
-
-let myGenericNumber = new GenericNumber<number>();
-myGenericNumber.zeroValue = 0;
-myGenericNumber.add = function(x, y) { return x + y; };
+const myInfo: TestPerson = {}
