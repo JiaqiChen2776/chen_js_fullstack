@@ -424,15 +424,59 @@
 
 
 // Partial
-interface Person {
-  name: string;
-  age: number;
-}
+// interface Person {
+//   name: string;
+//   age: number;
+// }
 
-type TestPerson = Partial<Person>
+// type TestPerson = Partial<Person>
 
-const yourInfo: Person = {
-  name: 'wu',
-  age: 18
-}
-const myInfo: TestPerson = {}
+// const yourInfo: Person = {
+//   name: 'wu',
+//   age: 18
+// }
+// const myInfo: TestPerson = {}
+// -----------------------------------------------
+
+
+// Record
+// type Page = "home" | "about" | "contact"
+// interface NewPage {
+//   title: string;
+//   name: string;
+//   desc: string;
+// }
+// const x: Record<Page, NewPage> = {
+//   home: { title: 'home', name: 'home', desc: 'home' },
+//   about: { title: 'about', name: 'about', desc: 'about' },
+//   contact: { title: 'contact', name: 'contact', desc: 'contact' }
+// }
+// -----------------------------------------------
+
+// Pick
+// type PageDesc = Pick<NewPage, "title" | "name">
+// -----------------------------------------------
+
+// Exclude
+// type Test1 = Exclude<"a" | "b" | "c", "d">   // "a" | "b" | "c"
+// type Test2 = Exclude<"a" | "b" | "c", "a">   // "b" | "c"
+// type Test3 = Exclude<"a" | "b" | "c", "a" | "b"> // "c"
+// -----------------------------------------------
+
+// ReturnType
+// type T0 = ReturnType<() => string>; // string
+// type T1 = ReturnType<(s: string) => void>; // void
+// type T2 = ReturnType<<T>() => T>; // unknown
+// type T3 = ReturnType<<T extends U, U extends number[]>() => T>; // number[]
+// type T4 = ReturnType<any>; // any
+// type T5 = ReturnType<never>; // never
+// // type T6 = ReturnType<string>; // Error
+// // type T7 = ReturnType<Function>; // Error
+
+// function neverFunc():never {
+//   while(true) {}
+// }
+// let test5: T5 = neverFunc()
+// -----------------------------------------------
+
+

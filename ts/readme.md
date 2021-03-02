@@ -28,10 +28,23 @@ TypeScript是JavaScript的超集
 - number
 - string
 - Any
-可移除类型检查
+可移除类型检查，任何类型都可被归为`any`类型，也叫“顶级类型”。
+可对any类型的值进行任何操作，不报错。
 ```typescript
 let a: any = 1
-a = '张三'  // ok
+a = '张三'  // ok  可将其他类型赋值给any
+let b: string = a // ok  可赋值给其他类型
+a() // 不检查报错
+```
+
+- unknown
+除`any`外的另一顶级类型，与`any`一样，任何类型的值都可赋值给`unknown`，但`unknown`类型的值只可赋值给`any`及其本身。
+不可对此类型变量进行任何操作。
+```typescript
+let a: unknown = 1
+a = '张三'  // ok  可将其他类型赋值给any
+let b: string = a // 报错，不可赋值给其他类型
+a() // 报错，不可对其进行任何操作
 ```
 
 - Void
@@ -49,6 +62,14 @@ let c: null = undefined
 
 - Never
 表示永不存在的值的类型，如抛出的异常、无返回值的表达式（如调用不会结束的函数）、箭头函数表达式返回值的类型。所有类型的子类型，只有其本身才能赋值给它。
+```ts
+function neverFunc():never {
+  while(true) {
+    
+  }
+}
+let test5: never = neverFunc()
+```
 
 ### 对象类型
 - 数组

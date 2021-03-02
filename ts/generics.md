@@ -17,6 +17,7 @@ console.log(createArr<number>(3, 1))
 ```
 // 定义泛型T，在函数调用时指定类型，相比于any，泛型可保持多处类型一致。
 
+
 ### 可定义多个类型
 ```ts
 function person<N, A>(name: N, age: A): [A, N] {
@@ -24,6 +25,7 @@ function person<N, A>(name: N, age: A): [A, N] {
 }
 console.log(person('chen', 18))
 ```
+
 
 ### 介绍几个基础操作符
 1. `typeof`
@@ -140,6 +142,7 @@ interface CreateArray<T> {
 }
 ```
 
+
 ### 泛型类
 与接口类似
 ```ts
@@ -169,6 +172,7 @@ let testVal = create(Test)
 console.log(testVal)  // Test { init: 1 }
 ```
 
+
 ### 泛型参数的默认类型
 类似于默认参数，参数也可指定默认类型
 ```ts
@@ -195,6 +199,7 @@ T extends U ? X : Y
 ```
 如上，表示若`T`类型满足`U`类型的约束，则返回`X`，否则返回`Y`。
 条件类型常与`infer`结合使用。见**泛型工具类型**处示例。
+
 
 ### 泛型工具类型
 ts内置常用工具类型：Partial、Required、ReadOnly、Record、ReturnType等。
@@ -225,3 +230,75 @@ const yourInfo: Person = {
 }
 const myInfo: TestPerson = {}
 ```
+
+#### `Record`
+`Record`的作用就是将某个类型中的所有属性的值转化为另一个类型。
+```ts
+type Record<K extends keyof any, T> = {
+  [P in K]: T;
+};
+```
+示例：
+```ts
+interface NewPage {
+  title: string;
+}
+const x: Record<Page, NewPage> = {
+  home: { title: 'home' },
+  about: { title: 'about' },
+  contact: { title: 'contact' }
+}
+```
+
+#### `Pick`
+`Pick`的作用就是将某个类型中的子属性复制出来，变成这个类型的子类型。
+```ts
+type Pick<T, K extends keyof T> = {
+  [P in K]: T[P]
+}
+```
+示例：
+```ts
+interface NewPage {
+  title: string;
+  name: string;
+  desc: string;
+}
+type PageDesc = Pick<NewPage, "title" | "name">
+/*
+PageDesc = {
+  title: string;
+  name: string;
+}
+*/
+```
+
+#### `Exclude`
+`Exclude`的作用就是将某个类型中的属于另一个类型移除掉。
+```ts
+type Exclude<T, U> = T extends U ? never : T;
+```
+示例：
+```ts
+type Test1 = Exclude<"a" | "b" | "c", "d">   // "a" | "b" | "c"
+type Test2 = Exclude<"a" | "b" | "c", "a">   // "b" | "c"
+type Test3 = Exclude<"a" | "b" | "c", "a" | "b"> // "c"
+```
+
+#### `ReturnType`
+`ReturnType`的作用就是获取函数的返回类型。
+```ts
+type ReturnType<T extends (...args: any) => any> = T extends (...args: any) => infer R ? R : any;
+```
+示例：
+```ts
+type T0 = ReturnType<() => string>; // string
+type T1 = ReturnType<(s: string) => void>; // void
+type T2 = ReturnType<<T>() => T>; // unknown
+type T3 = ReturnType<<T extends U, U extends number[]>() => T>; // number[]
+type T4 = ReturnType<any>; // any
+type T5 = ReturnType<never>; // never
+```
+
+
+### 使用泛型创建对象
