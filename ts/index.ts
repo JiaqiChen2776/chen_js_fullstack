@@ -480,3 +480,51 @@
 // -----------------------------------------------
 
 
+// 构造函数类型
+// interface Point {
+//   x: number;
+//   y: number;
+// }
+// interface PointConstructor {
+//   new (x: number, y: number): Point;
+// }
+// class Point2D implements Point {
+//   readonly x: number;
+//   readonly y: number;
+//   constructor(x: number, y: number) {
+//     this.x = x;
+//     this.y = y;
+//   }
+// }
+// function newPoint(
+//   PointConstructor: PointConstructor,
+//   x: number,
+//   y: number
+// ): Point {
+//   return new PointConstructor(x, y)
+// }
+// const point: Point = newPoint(Point2D, 1, 2)
+// console.log(point)
+
+
+// 使用泛型创建对象
+class FirstClass {
+  id: number | undefined;
+}
+class SecondClass {
+  name: string | undefined;
+}
+interface GenericConstructor<T> {
+  new (): T;
+}
+class GenericCreator<T> {
+  create(c: GenericConstructor<T>): T {
+    return new c();
+  }
+}
+
+const creator1 = new GenericCreator<FirstClass>();
+const first: FirstClass = creator1.create(FirstClass)
+const creator2 = new GenericCreator<SecondClass>();
+const second: SecondClass = creator2.create(SecondClass)
+console.log(first, second)

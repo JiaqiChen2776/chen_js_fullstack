@@ -302,3 +302,92 @@ type T5 = ReturnType<never>; // never
 
 
 ### 使用泛型创建对象
+使用泛型类时，可能需要通过泛型类来创建对象
+```ts
+// 泛型类
+class GenericCreator<T> {
+  create(): T {
+    return new T();
+  }
+}
+class FirstClass {
+  id: number | undefined;
+}
+const creator1 = new GenericCreator<FirstClass>();
+const obj: FirstClass = creator1.create()
+```
+如上代码编译错误`'T' only refers to a type, but is being used as a value here.`，表示`T`只是个类型，而`new T()`却把它当作值来用，这是不允许的。
+
+#### 构造签名
+在ts接口中，可使用`new`来描述一个构造函数：
+```ts
+interface FirstClass {
+  new (x: number): FirstClass;
+}
+```
+构造签名语法：
+> ConstructSignature: new TypeParametersopt ( ParameterListopt ) TypeAnnotationopt
+
+> 在上述的构造签名中， TypeParametersopt 、 ParameterListopt 和 TypeAnnotationopt 分别表
+示：可选的类型参数、可选的参数列表和可选的类型注解。
+
+#### 构造函数类型
+定义：包含一个或多个**构造签名**的对象类型被称为构造函数类型。
+形式：
+1. 构造函数类型字面量
+`new <T1, T2, ...> (p1, p2, ...) => R`
+2. 包含单个构造签名的对象类型字面量
+`{ new <T1, T2, ...> (p1, p2, ...): R }`
+
+示例：
+```ts
+new (x: number) => FirstClass;
+// 等价于
+{
+  new (x: number): FirstClass;
+}
+```
+
+应用：
+```ts
+// 因为不可将 new Point2D() 赋值给 Point 类型的变量，所以须将接口的属性和构造函数类型进行分离
+interface Point {
+  x: number;
+  y: number;
+}
+interface PointConstructor {
+  new (x: number, y: number): Point;
+}
+class Point2D implements Point {
+  readonly x: number;
+  readonly y: number;
+  constructor(x: number, y: number) {
+    this.x = x;
+    this.y = y;
+  }
+}
+function newPoint(PointConstructor: PointConstructor, x: number, y: number): Point {
+  return new PointConstructor(x, y)
+}
+const point: Point = newPoint(Point2D, 1, 2)
+console.log(point)
+``` 
+
+#### 使用泛型创建对象
+将类作为泛型参数传递，创建对应的对象。
+```ts
+class FirstClass {
+  id: number | undefined;
+}
+interface GenericConstructor<T> {
+  new (): T
+}
+class GenericCreator<T> {
+  create(c: GenericConstructor<T>): T {
+    return new c();
+  }
+}
+const creator1 = new GenericCreator<FirstClass>();
+const first: FirstClass = creator1.create(FirstClass)
+console.log(first)  // FirstClass {} 
+```
