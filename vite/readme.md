@@ -6,6 +6,8 @@ Vite是一个项目初始化构建工具，目前只支持Vue3.x
 - 热更新
 - 按需编译更新，不会刷新全部DOM节点
 
+Vite中用到的打包工具是`Rollup`。
+
 ### 使用
 1. npm
 - 创建项目：`npm init vite-app vite-project`
