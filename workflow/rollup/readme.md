@@ -136,3 +136,47 @@ export default {
 }
 ```
 - 配置 tsconfig.json，`tsc --init`生成配置文件，修改`"target": "es6"`、`"module": "esnext"`
+
+4. 编译css
+---
+rollup多用于开发类库，类库中通常不包含过多的css，若css较多的项目可使用webpack打包。
+- 安装插件：`npm install rollup-plugin-postcss --save-dev`
+- 配置rollup.config.js
+```js
+import postcss from 'rollup-plugin-postcss'
+export default {
+  plugins: [
+    postcss()
+  ]
+}
+```
+问题：
+    1. 报错：` Error: PostCSS plugin postcss-noop-plugin requires PostCSS 8.`
+    解决：安装`npm install autoprefixer --save-dev`，配置如下
+```js
+// rollup.config.js 配置文件
+import autoprefixer from 'autoprefixer'
+export default {
+  plugins: [
+    postcss({
+      plugins: [
+        autoprefixer({overrideBrowserslist: ['> 0.15% in CN']})  // 自动添加css前缀
+      ]
+    }),
+  ],
+}
+```
+    2. 报错：`Error: PostCSS plugin autoprefixer requires PostCSS 8. Update PostCSS or downgrade this plugin。`
+    解决：降低`autoprefixer`的版本，`npm install autoprefixer@8.0.0 --save-dev`
+    
+5. 压缩代码
+使用`terser`，它是适用于es6+的js解析器和压缩器工具包。uglify-js也可压缩代码，但只能压缩es5的代码。
+- 安装插件：`npm install rollup-plugin-terser --save-dev`
+- 配置rollup.config.js
+```js
+import { terser } from 'rollup-plugin-terser';
+export default {
+    terser()
+  ]
+}
+```
