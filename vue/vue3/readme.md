@@ -74,6 +74,18 @@ export default defineComponent ({
 })
 ```
 
+#### `onRenderTracked`状态跟踪
+- `onRenderTracked`会跟踪页面上所有响应式的变量和方法，只要有Update，就会触发。
+- 需要从vue中引入，参数为`event`
+
+#### `onRenderTriggered`状态触发
+- 只跟踪发生变化的值
+- 需从vue中引入，参数为`event`，其中属性如下：
+  - key 那个变量发生了变化
+  - newValue 更新后变量的值
+  - oldValue 更新前变量的值
+  - target 目前页面中的响应变量和函数
+
 ### 数据模型
 - Vue2
 ```js
@@ -106,7 +118,7 @@ export default {
 响应式数据：接收一个对象然后返回该对象的响应式代理。等同于Vue2.x的`Vue.observable()`，若要对一个单独的变量使用响应式，可使用`ref`。
 两种返回形式：
 1. 如上代码所示，声明`state`并返回，使用时需要`state.name`
-2. 引用`toRefs`，返回时用`...`展开
+2. 引用`toRefs`，返回时用`...`展开，使用时无需加`state`
 ```js
 import { reactive, toRefs } from 'vue';
 
@@ -143,4 +155,13 @@ nameRef = '李四'
 
 console.log(nameRef)  // 李四
 console.log(state.name)  // 李四
+```
+
+### watch
+- import从vue中引入watch
+- 参数：第一个参数是要监听的值，监听多个值时用数组（同理回调的newVal、oldVal也是数组），第二个参数是回调函数
+```ts
+watch(selectVal, (newVal, oldVal) => {
+  document.title = newVal
+})
 ```
