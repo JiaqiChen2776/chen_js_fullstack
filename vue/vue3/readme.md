@@ -165,3 +165,48 @@ watch(selectVal, (newVal, oldVal) => {
   document.title = newVal
 })
 ```
+
+### Teleport
+“任意传送门”，可将子节点渲染到存在于父组件之外的Dom节点。
+vue2中可通过第三方库`portal-vue`来实现。
+
+利用`teleport`来创建一个Toast提示功能，如下：
+- 首先在`index.html`中的app节点外新增一个节点；
+```html
+<div id="app"></div>
+<div id="toast"></div>
+```
+- 在App.vue中，添加`teleport`
+```html
+<button @click="showToast">toast提示</button>
+<teleport to='#toast'>
+  <div v-if="visible" class="show-toast">
+    Toast 提示内容
+  </div>
+</teleport>
+```
+```ts
+import { defineComponent, reactive, toRefs } from 'vue'
+export default defineComponent({
+  name: 'App',
+  setup () {
+    const data = reactive({
+      visible: false,
+      timer: 0,
+      showToast: () => {
+        data.visible = true
+        clearTimeout(data.timer)
+        data.timer = setTimeout(() => {
+          data.visible = false
+        }, 2000)
+      }
+    })
+    return {
+      ...toRefs(data)
+    }
+  }
+})
+```
+
+### Suspense异步请求组件
+
