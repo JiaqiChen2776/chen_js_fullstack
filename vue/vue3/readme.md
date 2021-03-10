@@ -208,5 +208,56 @@ export default defineComponent({
 })
 ```
 
-### Suspense异步请求组件
+### Suspense异步组件
+Suspense组件可等待数据获取，两个`template`包含两种不同状态，`#default`展示正式的内容，`#fallback`展示未加载完成时的内容。
+定时器模拟异步请求，页面显示“Loading...”，3秒后显示“success”，示例如下：
+- 父组件
+```vue
+<template>
+  <Suspense>
+    <template #default>
+      <Async></Async>
+    </template>
+    <template #fallback>
+      <h1>Loading...</h1>
+    </template>
+  </Suspense>
+</template>
 
+<script>
+import { defineComponent } from 'vue'
+import Async from './components/Async.vue'
+export default defineComponent({
+  name: 'App',
+  components: {
+    Async
+  }
+})
+</script>
+```
+
+- 子组件 Async
+```vue
+<template>
+  <h1>{{ result }}</h1>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+export default defineComponent({
+  async setup () {
+    const getData = () => {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          resolve('success')
+        }, 3000)
+      })
+    }
+    const result = await getData()
+    return {
+      result: result
+    }
+  }
+})
+</script>
+```
