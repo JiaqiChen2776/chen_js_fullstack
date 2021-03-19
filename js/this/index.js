@@ -1,8 +1,18 @@
-var showName = function() {
-    console.log('2')
+var name = 'window'
+function sayName() {
+    console.log(this.name)
 }
-function showName() {
-    console.log('1')
+var p1 = {
+    name: 'p1',
+    sayName: sayName
 }
-showName()
+var p2 = {
+    name: 'p2',
+    sayName: function() {
+        var fun = p1.sayName
+        fun()
+    }
+}
 
+p1.sayName()
+p2.sayName()
